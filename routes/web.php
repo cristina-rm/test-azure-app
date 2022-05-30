@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\FrontendController;
+use App\Http\Livewire\Permissions;
+use App\Http\Livewire\Roles;
+use App\Http\Livewire\Users;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,48 +17,25 @@
 |
 */
 
-use App\Task;
-use Illuminate\Http\Request;
-
-/**
-    * Show Task Dashboard
-    */
-Route::get('/', function () {
-    error_log("INFO: get /");
-    return view('tasks', [
-        'tasks' => Task::orderBy('created_at', 'asc')->get()
-    ]);
+/*Route::get('/', function () {
+    return view('welcome');
 });
 
-/**
-    * Add New Task
-    */
-Route::post('/task', function (Request $request) {
-    error_log("INFO: post /task");
-    $validator = Validator::make($request->all(), [
-        'name' => 'required|max:255',
-    ]);
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');*/
 
-    if ($validator->fails()) {
-        error_log("ERROR: Add task failed.");
-        return redirect('/')
-            ->withInput()
-            ->withErrors($validator);
-    }
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/', [FrontendController::class, 'index'])->name('welcome');
 
-    $task = new Task;
-    $task->name = $request->name;
-    $task->save();
+    Route::get('/admin', function () {
+        return redirect()->route('users');
+    })->name('dashboard');
 
-    return redirect('/');
-});
-
-/**
-    * Delete Task
-    */
-Route::delete('/task/{id}', function ($id) {
-    error_log('INFO: delete /task/'.$id);
-    Task::findOrFail($id)->delete();
-
-    return redirect('/');
+    // Admin dashboard
+    Route::prefix('admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
+        Route::get('users', Users::class)->name('users')->middleware('role:Admin|User Manager');
+        Route::get('roles', Roles::class)->name('roles')->middleware('role:Admin');
+        Route::get('permissions', Permissions::class)->name('permissions')->middleware('role:Admin');
+    });
 });
