@@ -52,32 +52,34 @@
             </div>
         @endif
 
-        <!-- First Name -->
-        <div class="col-span-6 sm:col-span-4 mt-4">
-            <x-jet-label for="first_name" value="{{ __('First Name') }}*" />
-            <x-jet-input id="first_name" type="text" class="mt-1 block w-full" wire:model.defer="state.first_name" autocomplete="first_name" />
-            <x-jet-input-error for="first_name" class="mt-2" />
-        </div>
-
-        <!-- Last Name -->
-        <div class="col-span-6 sm:col-span-4 mt-4">
-            <x-jet-label for="last_name" value="{{ __('Last Name') }}*" />
-            <x-jet-input id="last_name" type="text" class="mt-1 block w-full" wire:model.defer="state.last_name" autocomplete="last_name" />
-            <x-jet-input-error for="last_name" class="mt-2" />
+        <!-- Name -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-jet-label for="name" value="{{ __('Name') }}" />
+            <x-jet-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="state.name" autocomplete="name" />
+            <x-jet-input-error for="name" class="mt-2" />
         </div>
 
         <!-- Email -->
-        <div class="col-span-6 sm:col-span-4 mt-4">
+        <div class="col-span-6 sm:col-span-4">
             <x-jet-label for="email" value="{{ __('Email') }}" />
             <x-jet-input id="email" type="email" class="mt-1 block w-full" wire:model.defer="state.email" />
             <x-jet-input-error for="email" class="mt-2" />
-        </div>
 
-        <!-- Company -->
-        <div class="col-span-6 sm:col-span-4 mt-4">
-            <x-jet-label for="company_name" value="{{ __('Company name') }}*" />
-            <x-jet-input id="company_name" type="text" class="mt-1 block w-full" wire:model.defer="state.company_name" autocomplete="company_name" />
-            <x-jet-input-error for="company_name" class="mt-2" />
+            @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::emailVerification()) && ! $this->user->hasVerifiedEmail())
+                <p class="text-sm mt-2">
+                    {{ __('Your email address is unverified.') }}
+
+                    <button type="button" class="underline text-sm text-gray-600 hover:text-gray-900" wire:click.prevent="sendEmailVerification">
+                        {{ __('Click here to re-send the verification email.') }}
+                    </button>
+                </p>
+
+                @if ($this->verificationLinkSent)
+                    <p v-show="verificationLinkSent" class="mt-2 font-medium text-sm text-green-600">
+                        {{ __('A new verification link has been sent to your email address.') }}
+                    </p>
+                @endif
+            @endif
         </div>
     </x-slot>
 

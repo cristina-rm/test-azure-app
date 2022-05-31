@@ -5,36 +5,22 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('welcome') }}" target="_blank">
+                    <a href="{{ route('dashboard') }}">
                         <x-jet-application-mark class="block h-9 w-auto" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    @can('Manage users')
-                        <x-jet-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')">
-                            Users
-                        </x-jet-nav-link>
-                    @endcan
-
-                    @can('Manage roles')
-                        <x-jet-nav-link href="{{ route('roles') }}" :active="request()->routeIs('roles')">
-                            Roles
-                        </x-jet-nav-link>
-                    @endcan
-
-                    @can('Manage permissions')
-                        <x-jet-nav-link href="{{ route('permissions') }}" :active="request()->routeIs('permissions')">
-                            Permissions
-                        </x-jet-nav-link>
-                    @endcan
+                    <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-jet-nav-link>
                 </div>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <!-- Teams Dropdown -->
-                {{--@if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
+                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                     <div class="ml-3 relative">
                         <x-jet-dropdown align="right" width="60">
                             <x-slot name="trigger">
@@ -81,7 +67,7 @@
                             </x-slot>
                         </x-jet-dropdown>
                     </div>
-                @endif--}}
+                @endif
 
                 <!-- Settings Dropdown -->
                 <div class="ml-3 relative">
@@ -110,7 +96,7 @@
                                 {{ __('Manage Account') }}
                             </div>
 
-                            <x-jet-dropdown-link href="{{ route('profile.show') }}" target="_blank">
+                            <x-jet-dropdown-link href="{{ route('profile.show') }}">
                                 {{ __('Profile') }}
                             </x-jet-dropdown-link>
 
@@ -123,12 +109,11 @@
                             <div class="border-t border-gray-100"></div>
 
                             <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('logout') }}" x-data>
                                 @csrf
 
                                 <x-jet-dropdown-link href="{{ route('logout') }}"
-                                         onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                         @click.prevent="$root.submit();">
                                     {{ __('Log Out') }}
                                 </x-jet-dropdown-link>
                             </form>
@@ -152,23 +137,9 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            @hasanyrole('Admin|User Manager')
-                <x-jet-responsive-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')">
-                    Users
-                </x-jet-responsive-nav-link>
-            @endhasanyrole
-
-            @can('Manage roles')
-                <x-jet-responsive-nav-link href="{{ route('roles') }}" :active="request()->routeIs('roles')">
-                    Roles
-                </x-jet-responsive-nav-link>
-            @endcan
-
-            @can('Manage permissions')
-                <x-jet-responsive-nav-link href="{{ route('permissions') }}" :active="request()->routeIs('permissions')">
-                    Permissions
-                </x-jet-responsive-nav-link>
-            @endcan
+            <x-jet-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                {{ __('Dashboard') }}
+            </x-jet-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
@@ -188,7 +159,7 @@
 
             <div class="mt-3 space-y-1">
                 <!-- Account Management -->
-                <x-jet-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')" target="_blank">
+                <x-jet-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
                     {{ __('Profile') }}
                 </x-jet-responsive-nav-link>
 
@@ -199,18 +170,17 @@
                 @endif
 
                 <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('logout') }}" x-data>
                     @csrf
 
                     <x-jet-responsive-nav-link href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
-                                    this.closest('form').submit();">
+                                   @click.prevent="$root.submit();">
                         {{ __('Log Out') }}
                     </x-jet-responsive-nav-link>
                 </form>
 
                 <!-- Team Management -->
-                {{--@if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
+                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                     <div class="border-t border-gray-200"></div>
 
                     <div class="block px-4 py-2 text-xs text-gray-400">
@@ -238,7 +208,7 @@
                     @foreach (Auth::user()->allTeams() as $team)
                         <x-jet-switchable-team :team="$team" component="jet-responsive-nav-link" />
                     @endforeach
-                @endif--}}
+                @endif
             </div>
         </div>
     </div>

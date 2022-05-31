@@ -8,26 +8,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
 
 class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
-    use HasTeams;
     use Notifiable;
     use TwoFactorAuthenticatable;
-    use HasRoles;
-    use LogsActivity;
-
-    protected static $recordEvents = ['created', 'deleted'];
-    protected static $logName = 'system';
-    protected static $logAttributes = ['name', 'email'];
 
     /**
      * The attributes that are mass assignable.
@@ -35,7 +24,9 @@ class User extends Authenticatable
      * @var string[]
      */
     protected $fillable = [
-        'name', /*'UUID',*/ 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
@@ -67,12 +58,4 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
-
-    /**
-     * Get the profile associated with the user.
-     */
-    public function profile()
-    {
-        return $this->hasOne(Profile::class);
-    }
 }

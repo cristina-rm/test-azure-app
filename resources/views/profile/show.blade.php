@@ -7,12 +7,6 @@
 
     <div>
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-            @if (session()->has('message'))
-                <div class="flex rounded-md bg-green-100 text-gray-600 shadow-lg px-4 py-3 mb-3" role="alert">
-                    <p class="text-sm">{{ session('message') }}</p>
-                </div>
-            @endif
-            
             @if (Laravel\Fortify\Features::canUpdateProfileInformation())
                 @livewire('profile.update-profile-information-form')
 

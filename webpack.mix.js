@@ -15,9 +15,7 @@ mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
-    ])
-    .css('resources/css/front.css', 'public/css')
-    .css('resources/css/custom.css', 'public/css');
+    ]);
 
 if (mix.inProduction()) {
     mix.version();

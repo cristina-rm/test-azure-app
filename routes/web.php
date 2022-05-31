@@ -1,9 +1,5 @@
 <?php
 
-use App\Http\Controllers\FrontendController;
-use App\Http\Livewire\Permissions;
-use App\Http\Livewire\Roles;
-use App\Http\Livewire\Users;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,25 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/*Route::get('/', function () {
+Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');*/
-
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/', [FrontendController::class, 'index'])->name('welcome');
-
-    Route::get('/admin', function () {
-        return redirect()->route('users');
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified'
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
     })->name('dashboard');
-
-    // Admin dashboard
-    Route::prefix('admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
-        Route::get('users', Users::class)->name('users')->middleware('role:Admin|User Manager');
-        Route::get('roles', Roles::class)->name('roles')->middleware('role:Admin');
-        Route::get('permissions', Permissions::class)->name('permissions')->middleware('role:Admin');
-    });
 });
